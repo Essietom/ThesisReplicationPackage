@@ -1,0 +1,5 @@
+            Df Sum Sq Mean Sq F value  Pr(>F)   
+Tactic       1  2.138  2.1382   9.682 0.00425 **
+Residuals   28  6.184  0.2208                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

@@ -1,0 +1,276 @@
+{
+    "results": [
+        [
+            {
+                "field": "bin(10m)",
+                "value": "2023-06-14 11:20:00.000"
+            },
+            {
+                "field": "provisonedMemoryMB",
+                "value": "256"
+            },
+            {
+                "field": "smallestMemoryRequestMB",
+                "value": "48"
+            },
+            {
+                "field": "avgMemoryUsedMB",
+                "value": "49.9881"
+            },
+            {
+                "field": "maxMemoryUsedMB",
+                "value": "50"
+            },
+            {
+                "field": "overProvisionedMB",
+                "value": "206"
+            },
+            {
+                "field": "avg(@duration)",
+                "value": "7.7621"
+            },
+            {
+                "field": "max(@duration)",
+                "value": "51.99"
+            },
+            {
+                "field": "min(@duration)",
+                "value": "3.96"
+            }
+        ],
+        [
+            {
+                "field": "bin(10m)",
+                "value": "2023-06-14 11:10:00.000"
+            },
+            {
+                "field": "provisonedMemoryMB",
+                "value": "256"
+            },
+            {
+                "field": "smallestMemoryRequestMB",
+                "value": "48"
+            },
+            {
+                "field": "avgMemoryUsedMB",
+                "value": "49.6"
+            },
+            {
+                "field": "maxMemoryUsedMB",
+                "value": "50"
+            },
+            {
+                "field": "overProvisionedMB",
+                "value": "206"
+            },
+            {
+                "field": "avg(@duration)",
+                "value": "7.0604"
+            },
+            {
+                "field": "max(@duration)",
+                "value": "53.24"
+            },
+            {
+                "field": "min(@duration)",
+                "value": "3.61"
+            }
+        ],
+        [
+            {
+                "field": "bin(10m)",
+                "value": "2023-06-14 11:00:00.000"
+            },
+            {
+                "field": "provisonedMemoryMB",
+                "value": "256"
+            },
+            {
+                "field": "smallestMemoryRequestMB",
+                "value": "47"
+            },
+            {
+                "field": "avgMemoryUsedMB",
+                "value": "49.4272"
+            },
+            {
+                "field": "maxMemoryUsedMB",
+                "value": "50"
+            },
+            {
+                "field": "overProvisionedMB",
+                "value": "206"
+            },
+            {
+                "field": "avg(@duration)",
+                "value": "7.3029"
+            },
+            {
+                "field": "max(@duration)",
+                "value": "51.87"
+            },
+            {
+                "field": "min(@duration)",
+                "value": "3.82"
+            }
+        ],
+        [
+            {
+                "field": "bin(10m)",
+                "value": "2023-06-14 10:50:00.000"
+            },
+            {
+                "field": "provisonedMemoryMB",
+                "value": "256"
+            },
+            {
+                "field": "smallestMemoryRequestMB",
+                "value": "45"
+            },
+            {
+                "field": "avgMemoryUsedMB",
+                "value": "49.388"
+            },
+            {
+                "field": "maxMemoryUsedMB",
+                "value": "50"
+            },
+            {
+                "field": "overProvisionedMB",
+                "value": "206"
+            },
+            {
+                "field": "avg(@duration)",
+                "value": "8.6195"
+            },
+            {
+                "field": "max(@duration)",
+                "value": "315.11"
+            },
+            {
+                "field": "min(@duration)",
+                "value": "4.19"
+            }
+        ],
+        [
+            {
+                "field": "bin(10m)",
+                "value": "2023-06-14 10:40:00.000"
+            },
+            {
+                "field": "provisonedMemoryMB",
+                "value": "256"
+            },
+            {
+                "field": "smallestMemoryRequestMB",
+                "value": "48"
+            },
+            {
+                "field": "avgMemoryUsedMB",
+                "value": "49.3481"
+            },
+            {
+                "field": "maxMemoryUsedMB",
+                "value": "50"
+            },
+            {
+                "field": "overProvisionedMB",
+                "value": "206"
+            },
+            {
+                "field": "avg(@duration)",
+                "value": "7.5209"
+            },
+            {
+                "field": "max(@duration)",
+                "value": "54.52"
+            },
+            {
+                "field": "min(@duration)",
+                "value": "4.04"
+            }
+        ],
+        [
+            {
+                "field": "bin(10m)",
+                "value": "2023-06-14 10:30:00.000"
+            },
+            {
+                "field": "provisonedMemoryMB",
+                "value": "256"
+            },
+            {
+                "field": "smallestMemoryRequestMB",
+                "value": "45"
+            },
+            {
+                "field": "avgMemoryUsedMB",
+                "value": "47.5176"
+            },
+            {
+                "field": "maxMemoryUsedMB",
+                "value": "49"
+            },
+            {
+                "field": "overProvisionedMB",
+                "value": "207"
+            },
+            {
+                "field": "avg(@duration)",
+                "value": "8.0327"
+            },
+            {
+                "field": "max(@duration)",
+                "value": "305.43"
+            },
+            {
+                "field": "min(@duration)",
+                "value": "4.16"
+            }
+        ],
+        [
+            {
+                "field": "bin(10m)",
+                "value": "2023-06-14 10:20:00.000"
+            },
+            {
+                "field": "provisonedMemoryMB",
+                "value": "256"
+            },
+            {
+                "field": "smallestMemoryRequestMB",
+                "value": "46"
+            },
+            {
+                "field": "avgMemoryUsedMB",
+                "value": "46.7143"
+            },
+            {
+                "field": "maxMemoryUsedMB",
+                "value": "47"
+            },
+            {
+                "field": "overProvisionedMB",
+                "value": "209"
+            },
+            {
+                "field": "avg(@duration)",
+                "value": "12.6973"
+            },
+            {
+                "field": "max(@duration)",
+                "value": "321.55"
+            },
+            {
+                "field": "min(@duration)",
+                "value": "4.23"
+            }
+        ]
+    ],
+    "statistics": {
+        "recordsMatched": 1756.0,
+        "recordsScanned": 5271.0,
+        "bytesScanned": 624372.0
+    },
+    "status": "Complete"
+}

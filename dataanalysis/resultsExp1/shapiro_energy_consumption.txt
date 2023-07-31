@@ -1,0 +1,6 @@
+
+	Shapiro-Wilk normality test
+
+data:  func_data
+W = 0.90753, p-value = 4.861e-07
+

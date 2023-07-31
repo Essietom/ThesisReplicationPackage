@@ -1,0 +1,8 @@
+
+Cliff's Delta
+
+delta estimate: 0.5416667 (large)
+95 percent confidence interval:
+     lower      upper 
+0.04475384 0.82370678 
+

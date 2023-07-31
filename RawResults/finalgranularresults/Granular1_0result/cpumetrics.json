@@ -1,0 +1,80 @@
+{
+    "Label": "CPUUtilization",
+    "Datapoints": [
+        {
+            "Timestamp": "2023-06-23T14:41:00+00:00",
+            "Average": 0.010282112844288347,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:06:00+00:00",
+            "Average": 0.011264902539551258,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:51:00+00:00",
+            "Average": 0.010496814580013353,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:16:00+00:00",
+            "Average": 0.011032652171949545,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T13:41:00+00:00",
+            "Average": 0.009114786175390086,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:26:00+00:00",
+            "Average": 0.011683372966945172,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T13:51:00+00:00",
+            "Average": 0.010185740763942401,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:36:00+00:00",
+            "Average": 0.010697229330738387,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:01:00+00:00",
+            "Average": 0.010007649163405099,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:46:00+00:00",
+            "Average": 0.011885298322886229,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:11:00+00:00",
+            "Average": 0.011435618934532007,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:21:00+00:00",
+            "Average": 0.010168787526587644,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T13:46:00+00:00",
+            "Average": 0.0104189553608497,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T14:31:00+00:00",
+            "Average": 0.012813998820881047,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-23T13:56:00+00:00",
+            "Average": 0.010036633908748626,
+            "Unit": "Percent"
+        }
+    ]
+}

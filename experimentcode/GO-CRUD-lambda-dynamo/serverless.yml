@@ -1,0 +1,87 @@
+service: go-crud-serverless
+
+frameworkVersion: '>=2.0.0'
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: ${opt:stage, "staging"}
+  region: ${opt:region, "eu-central-1"}
+  stackName: serverless-webapi
+  stackTags: 
+    Application: LambdaWebApi15-100users
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:BatchGetItem
+        - dynamodb:Scan
+        - dynamodb:DeleteItem
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:Query
+        - dynamodb:UpdateItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
+
+    
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  getUsers:
+    memorySize: 256
+    handler: bin/main
+    events:
+      - http:
+          path: /users
+          method: get
+          cors: true
+  createUser:
+    memorySize: 256
+    handler: bin/main
+    events:
+      - http:
+          path: /users
+          method: post
+          cors: true
+  updateUser:
+    memorySize: 256
+    handler: bin/main
+    events:
+      - http:
+          path: /users/{id}
+          method: put
+          cors: true
+  deleteUser:
+    memorySize: 256
+    handler: bin/main
+    events:
+      - http:
+          path: /users/{id}
+          method: delete
+          cors: true
+
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: lambda-users
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        # ProvisionedThroughput:
+        #   ReadCapacityUnits: 1
+        #   WriteCapacityUnits: 1

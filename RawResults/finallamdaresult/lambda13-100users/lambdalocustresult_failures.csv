@@ -1,0 +1,2 @@
+Method,Name,Error,Occurrences
+DELETE,/staging/users/1687123856796852253,HTTPError('500 Server Error: Internal Server Error for url: /staging/users/1687123856796852253'),1

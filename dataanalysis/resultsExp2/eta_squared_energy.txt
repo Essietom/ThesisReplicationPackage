@@ -1,0 +1,9 @@
+# Effect Size for ANOVA (Type I)
+
+Parameter   | Eta2 (partial) |       95% CI
+-------------------------------------------
+Load        |           0.88 | [0.85, 1.00]
+Tactic      |           0.76 | [0.70, 1.00]
+Load:Tactic |           0.24 | [0.12, 1.00]
+
+- One-sided CIs: upper bound fixed at [1.00].

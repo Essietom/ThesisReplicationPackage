@@ -1,0 +1,7 @@
+                 Df Sum Sq Mean Sq F value Pr(>F)    
+Load              3  42.84   14.28 184.197 <2e-16 ***
+Deployment        1  59.17   59.17 763.226 <2e-16 ***
+Load:Deployment   3   0.53    0.18   2.297 0.0815 .  
+Residuals       112   8.68    0.08                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

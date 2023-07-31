@@ -1,0 +1,366 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Serverless patterns - API Gateway to Private HTTP Endpoint via VPC Link
+
+# Parameters to input VPC id and private subnet ids where the ECS cluster and Application Load Balancer will be created.
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: The ID of the VPC where the ECS cluster will be deployed
+    Default: vpc-xxx
+  PrivateSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: The IDs of the subnets where the ECS tasks will be deployed
+    Default: subnet-xxx, subnet-xxx, subnet-xxx
+  ApplicationName:
+    Description: app name
+    Type: String
+    Default: tag_id
+  Environment:
+    Description: deployment env
+    Type: String
+    Default: staging
+
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: table_name 
+      AttributeDefinitions: 
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+
+  # Load balancer security group. CIDR and port ingress can be changed as required.
+  C100LoadBalancerSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: LoadBalancer Security Group
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow from anyone on port 8080
+          FromPort: 8080
+          IpProtocol: tcp
+          ToPort: 8080
+        - CidrIp: 0.0.0.0/0
+          Description: Allow from anyone on port 80
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+      VpcId: !Ref VpcId
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+  # Load balancer security group egress rule to ECS cluster security group.
+  C100LoadBalancerSGEgressToECSSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      GroupId: !GetAtt 
+        - C100LoadBalancerSG
+        - GroupId
+      IpProtocol: tcp
+      Description: Target group egress
+      DestinationSecurityGroupId: !GetAtt 
+        - C100ECSSecurityGroup
+        - GroupId
+      FromPort: 8080
+      ToPort: 8080
+  # ECS cluster security group.
+  C100ECSSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: ECS Security Group
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: '-1'
+      VpcId: !Ref VpcId
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+  # ECS cluster security group ingress from the load balancer.
+  C100ECSSecurityGroupIngressFromLoadBalancer:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      IpProtocol: tcp
+      Description: Ingress from Load Balancer
+      FromPort: 8080
+      GroupId: !GetAtt 
+        - C100ECSSecurityGroup
+        - GroupId
+      SourceSecurityGroupId: !GetAtt 
+        - C100LoadBalancerSG
+        - GroupId
+      ToPort: 8080
+  # Create the internal application load balancer (ALB) in the private subnets.
+  C100LoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      # Scheme: internal
+      Name: container1-loadbalancer
+      Scheme: internet-facing
+      SecurityGroups:
+        - !GetAtt 
+          - C100LoadBalancerSG
+          - GroupId
+      Subnets: !Ref PrivateSubnetIds
+      Type: application
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+  # Create the ALB target group for ECS.
+  C100LoadBalancerListenerTargetGroupECS:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Port: 8080
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref VpcId
+      Name: loadbalancer1-targetgroup
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+  # Create the ALB listener with the target group.
+  # LoadBalancerListener:
+  #   Type: 'AWS::ElasticLoadBalancingV2::Listener'
+  #   Properties:
+  #     DefaultActions:
+  #       - TargetGroupArn: !Ref LoadBalancerListenerTargetGroupECS
+  #         Type: forward
+  #     LoadBalancerArn: !Ref LoadBalancer
+  #     Port: 8080
+  #     Protocol: HTTP
+  C100ApigatewayListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref C100LoadBalancerListenerTargetGroupECS
+          Type: forward
+      LoadBalancerArn: !Ref C100LoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  # Create the ECS Cluster and Fargate launch type service in the private subnets
+  C100ECSFargateCluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties: 
+      ClusterName: container1webcluster
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+  C100ECSService:
+    Type: 'AWS::ECS::Service'
+    Properties:
+      Cluster: !Ref C100ECSFargateCluster
+      ServiceName: container1webservice
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DesiredCount: 1
+      EnableECSManagedTags: false
+      # HealthCheckGracePeriodSeconds: 180
+      LaunchType: FARGATE
+      LoadBalancers:
+        - ContainerName: container1webapi
+          ContainerPort: 8080
+          TargetGroupArn: !Ref C100LoadBalancerListenerTargetGroupECS
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !GetAtt 
+              - C100ECSSecurityGroup
+              - GroupId
+          Subnets: !Ref PrivateSubnetIds
+      TaskDefinition: !Ref C100ECSServiceTaskDefinition
+      PropagateTags: TASK_DEFINITION
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+    DependsOn:
+      - C100LoadBalancerListenerTargetGroupECS
+      - C100ApigatewayListener
+
+  # Create the ECS Service task definition. 
+  # 'nginx' image is being used in the container definition.
+  # This image is pulled from the docker hub which is the default image repository.
+  # ECS task execution role and the task role is used which can be attached with additional IAM policies to configure the required permissions.
+  C100ECSServiceTaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:
+      ContainerDefinitions:
+        - Essential: true
+          Image: 466667260812.dkr.ecr.eu-central-1.amazonaws.com/go-crud-container1-dynamo:latest
+          # Image: public.ecr.aws/e0f0i7n7/hello-world
+          Name: container1webapi
+          PortMappings:
+            - ContainerPort: 8080
+              HostPort: 8080
+              Protocol: tcp
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: container1webapilog
+              awslogs-region: eu-central-1
+              awslogs-create-group: true
+              awslogs-stream-prefix: ccf-admin
+              mode: non-blocking
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+      Cpu: '512'
+      ExecutionRoleArn: !GetAtt 
+        - C100ECSTaskExecutionRole
+        - Arn
+      Memory: '1024'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !GetAtt 
+        - C100ECSTaskRole
+        - Arn
+      Family : "container1webtaskfamily"
+
+  C100ECSTaskExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: 'sts:AssumeRole'
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      Policies: 
+        - PolicyName: AccessECR
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - "ecr:GetAuthorizationToken"
+                  - "ecr:BatchCheckLayerAvailability"
+                  - "ecr:GetDownloadUrlForLayer"
+                  - "ecr:BatchGetImage"
+                  - "logs:*"
+                Resource: '*'
+  C100ECSTaskRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      Policies: 
+        - PolicyName: AccessDynamo
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - dynamodb:BatchGetItem
+                  - dynamodb:Scan
+                  - dynamodb:DeleteItem
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:Query
+                  - dynamodb:UpdateItem
+                Resource: '*'
+  C100VPCLinkSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: VPC Link Security Group
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow from anyone on port 8080
+          FromPort: 8080
+          IpProtocol: tcp
+          ToPort: 8080
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: '-1'
+      VpcId: !Ref VpcId
+      Tags: 
+        - Key: "Application"
+          Value: !Ref ApplicationName
+        - Key: "Environment"
+          Value: !Ref Environment
+ 
+
+  ECSAutoScalingRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: application-autoscaling.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: ecs-autoscaling-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'application-autoscaling:*'
+                  - 'cloudwatch:DescribeAlarms'
+                  - 'cloudwatch:GetMetricStatistics'
+                Resource: '*'
+
+
+  AutoScalingTarget:
+      Type: AWS::ApplicationAutoScaling::ScalableTarget
+      Properties:
+        MaxCapacity: 1
+        MinCapacity: 1
+        ResourceId: !Join ["/", [service, !Ref "C100ECSFargateCluster", !GetAtt [C100ECSService, Name]]]
+        RoleARN: !GetAtt ECSAutoScalingRole.Arn
+        ScalableDimension: ecs:service:DesiredCount
+        ServiceNamespace: ecs
+
+  AutoScalingPolicy:
+      Type: AWS::ApplicationAutoScaling::ScalingPolicy
+      Properties:
+        PolicyName: ServiceAutoScalingPolicy
+        PolicyType: TargetTrackingScaling
+        ScalingTargetId: !Ref AutoScalingTarget
+        TargetTrackingScalingPolicyConfiguration:
+            PredefinedMetricSpecification:
+              PredefinedMetricType: ECSServiceAverageCPUUtilization
+            ScaleInCooldown: 10
+            ScaleOutCooldown: 10
+            TargetValue: 80
+
+# Outputs:
+#   # Generated API GW endpoint URL that can be used to access the application running on a private ECS Fargate cluster.
+#   APIGWEndpoint:
+#     Description: API Gateway Endpoint
+#     Value: !GetAtt APIGWHTTPEndpoint.ApiEndpoint

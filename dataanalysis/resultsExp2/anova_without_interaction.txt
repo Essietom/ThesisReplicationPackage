@@ -1,0 +1,6 @@
+             Df Sum Sq Mean Sq F value Pr(>F)    
+Load          3  73.86  24.620   211.6 <2e-16 ***
+Tactic        1  31.46  31.457   270.3 <2e-16 ***
+Residuals   115  13.38   0.116                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

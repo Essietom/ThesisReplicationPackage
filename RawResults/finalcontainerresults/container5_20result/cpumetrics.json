@@ -1,0 +1,65 @@
+{
+    "Label": "CPUUtilization",
+    "Datapoints": [
+        {
+            "Timestamp": "2023-06-14T08:52:00+00:00",
+            "Average": 1.963620599110921,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:37:00+00:00",
+            "Average": 7.497334130605063,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:02:00+00:00",
+            "Average": 3.4774472236633303,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:12:00+00:00",
+            "Average": 3.100570631027222,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:22:00+00:00",
+            "Average": 5.314147313435873,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T08:47:00+00:00",
+            "Average": 1.1994428180779022,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:32:00+00:00",
+            "Average": 7.015925057729087,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T08:57:00+00:00",
+            "Average": 3.6101043224334717,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:42:00+00:00",
+            "Average": 7.030453109741211,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:07:00+00:00",
+            "Average": 3.3734447161356607,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:17:00+00:00",
+            "Average": 4.140513435999552,
+            "Unit": "Percent"
+        },
+        {
+            "Timestamp": "2023-06-14T09:27:00+00:00",
+            "Average": 5.9124080657958995,
+            "Unit": "Percent"
+        }
+    ]
+}
